@@ -1,3 +1,353 @@
+#autenticaao 
+<?php
+session_start();
+
+require_once "config.php";
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Obtém os dados do formulário
+    $email = $_POST['email'];
+    $senha = $_POST['senha'];
+
+
+    $sql = "SELECT * FROM Usuario WHERE email = '$email' AND senha = '$senha'";
+    $result = $conexao->query($sql); 
+
+    if ($result && $result->num_rows > 0) {
+
+        $_SESSION['loggedin'] = true;
+        $_SESSION['email'] = $email;
+        header("Location: principal.html");
+        exit;
+    } else {
+        echo "Credenciais inválidas.";
+    }
+}
+?>
+
+#confphp
+<?php
+$dbHost = 'localhost';
+$dbUsername = 'root';
+$dbPassword = '';
+$dbName = 'bancoteste';
+
+$conexao = new mysqli($dbHost, $dbUsername, $dbPassword, $dbName);
+
+if ($conexao->connect_error) {
+    die("Erro na conexão com o banco de dados: " . $conexao->connect_error);
+}
+else{
+}
+?>
+
+#indexphp 
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./login.css">
+    <title>Login</title>
+    <style>
+        html, body {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="autenticacao.php" class="login bg-light p-4 rounded" method="POST">
+            <h2 class="mb-4">Login</h2>
+            <div class="form-group">
+                <label for="email">Usuário</label>
+                <input type="text" class="form-control" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="senha">Senha</label>
+                <input type="password" class="form-control" name="senha" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+        </form>
+    </div>
+</body>
+</html>
+
+#login
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+}
+body{
+    display: flex;
+    align-items:center;
+    justify-content: center;
+    min-height: 100vh;
+}
+form{
+    background-color: rgb(219, 219, 219);
+    width: 400px;
+    padding: 40px;
+    border-radius: 10px;
+}
+form h2{
+    margin-bottom: 30px;
+    font-size: 30px;
+    color: #000000;
+    text-align: center;
+}
+form .box-user{
+    position: relative;
+}
+form .box-user input{
+    width: 100%;
+    padding: 10px 0;
+    outline: none;
+    border: 0;
+    background: transparent;
+    border-bottom: 1px solid #0f0f0f;
+    color: #131111;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+form .box-user label{
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px 0;
+    color: #000000;
+    font-size: 16px;
+    pointer-events: none;
+    transition: .5s;
+}
+form .box-user input:focus~label,
+form .box-user input:valid~label
+{
+    top: -20px;
+    left: 0;
+    color: #088018;
+    font-size: 12px;
+}
+.forget{
+    font-size: 12px;
+    color: #000000;
+    float: right;
+}
+.btn{
+    position: relative;
+    display: inline-block;
+    padding: 12px 20px;
+    color: #ffffff;
+    text-decoration: none;
+    text-transform: uppercase;
+    font-size: 13px;
+    letter-spacing: 4px;
+    font-weight: 700;
+    margin-top: 20px;
+    transition: .5s;
+    overflow: hidden;
+    text-align: center;
+}
+.btn:hover{
+background: #088018;
+border-radius: 5px;
+color: antiquewhite;
+}
+.btn span{
+    position: absolute;
+    display: block;
+}
+.btn span:nth-child(1){
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, #088018);
+    animation: btn1 1s linear infinite;
+}
+@keyframes btn1{
+    0%{
+        left: -100%;
+    }
+    50%,
+    100%{
+        left: 100%;
+    }
+}
+.btn span:nth-child(2){
+    top: -100%;
+    right: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, transparent, #088018);
+    animation: btn2 1s linear infinite;
+    animation-delay: .20s;
+}
+@keyframes btn2{
+    0%{
+        height: -100%;
+    }
+    50%,
+    100%{
+        top: 100%;
+    }
+}
+.btn span:nth-child(3){
+    bottom: 0;
+    right: -100%;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(270deg, transparent, #088018);
+    animation: btn3 1s linear infinite;
+    animation-delay: .50s;
+}
+@keyframes btn3{
+    0%{
+        right: -100%;
+    }
+    50%,
+    100%{
+        right: 100%;
+    }
+}
+.btn span:nth-child(4){
+    bottom: -100%;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(26deg, transparent, #088018);
+    animation: btn4 1s linear infinite;
+    animation-delay: .80s;
+}
+@keyframes btn4{
+    0%{
+        bottom: -100%;
+    }
+    50%,
+    100%{
+        bottom: 100%;
+    }
+}
+@media (max-width: 403px){
+    form{
+       width: 90%; 
+    }
+}
+
+#principal
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: sans-serif;
+  }
+  
+  .p1 {
+      color: #000000;
+  }
+  
+  .titulo1 {
+      margin: 80px 0;
+      display: flex;
+      justify-content: center;
+  }
+  
+  table, th, td {
+      border: 1px solid #000000;
+  }
+  
+  th, td {
+      padding: 8px;
+  }
+  
+  th {
+      background-color: #349ae2;
+  }
+  
+  .bnp {
+      background-color: #349ae2;
+  }
+  
+  .mjg {
+      margin-top: 50px;
+      display: flex;
+      justify-content: center;
+      width: 100%;
+  }
+  
+  .nk1, .pg {
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+  }
+  
+  .nk2, .nk3, .nk4, .nk5, .nk6, .nk7, .nk8, .nk9, .nk10 {
+      margin-top: 10px;
+      display: flex;
+      justify-content: center;
+  }
+  
+  .çp, .ty, .lo, .nk11, .ij, .po, .kl {
+      margin-top: 60px;
+      display: flex;
+      justify-content: center;
+  }
+  
+  @media only screen and (max-width: 768px) {
+      th, td {
+          padding: 6px;
+      }
+  }
+  
+  @media only screen and (max-width: 450px) {
+      .mjg {
+          max-width: 100vw;
+          overflow-x: scroll;
+          width: 100%;
+      }
+  }
+  @media (max-width: 450px) {
+    .mjg{
+      display: flex;
+      position: relative;
+      margin-left: 300px;
+      width: 150%;
+
+    }
+    img{
+        width: 100%;
+    }
+  }
+
+  #scripmysql
+  create schema bancoteste;
+
+use bancoteste;
+
+
+CREATE TABLE Usuario(
+	idUsuario INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	email VARCHAR (255),
+    senha VARCHAR (255)
+);
+    
+INSERT INTO Usuario (email, senha) VALUES ('teste', 'teste');
+
+SELECT * FROM Usuario
+
+#
+
+
+
+
+
 # univesp
 
 Projeto: acompanhhamento de vendas
